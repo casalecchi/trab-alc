@@ -19,10 +19,12 @@ def decomposicao_lu(matriz, b, n):
     # Modificação da matriz A em LU, sem pivotamento
     for k in range(n):
         for i in range(k + 1, n):
+            if matriz[k][k] == 0:
+                return "Execução parada. Pivô nulo detectado."
             matriz[i][k] = matriz[i][k] / matriz[k][k]
         for j in range(k + 1, n):
             for i in range(k + 1, n):
-                matriz[i][j] = matriz[i][j] - matriz[i][k] * matriz[k][j]
+                matriz[i][j] -= (matriz[i][k] * matriz[k][j])
 
     # Modificamos o vetor B para se transformar em Y
 
@@ -47,12 +49,17 @@ def decomposicao_cholesky(matriz, b, n):
 
     # Matriz A precisa ser uma matriz simétrica positiva definida
     if not simetrica(matriz):
-        return "Matriz deve ser simétrica positiva definida"
+        return "Execução parada. Matriz deve ser simétrica positiva definida"
 
     for i in range(n):
         for k in range(i):
             matriz[i][i] -= (matriz[i][k] ** 2)
+
+        if matriz[i][i] <= 0:
+            return "Execução parada. Matriz deve ser simétrica positiva definida"
+
         matriz[i][i] = matriz[i][i] ** (1/2)
+
         for j in range(i + 1, n):
             matriz[j][i] = matriz[i][j]
             for k in range(i):
@@ -82,6 +89,10 @@ def decomposicao_cholesky(matriz, b, n):
 def iterativo_jacobi(matriz, b, n, tol):
     # ICOD == 3
     # Matriz A deve ser diagonal dominante
+    if not diagonal_dominante(matriz):
+        return "Execução parada. Matriz deve ser diagonal dominante."
+
+    # Inicializar x0 e x1
     x0 = [1 for _ in range(n)]
     x1 = [0 for _ in range(n)]
 
@@ -102,7 +113,7 @@ def iterativo_jacobi(matriz, b, n, tol):
             break
 
         # Copia os elementos de x1 para x0
-        x0 = x1[::1]
+        x0 = x1[:]
 
     return x1, x0, historico
 
@@ -110,6 +121,9 @@ def iterativo_jacobi(matriz, b, n, tol):
 def iterativo_gauss_seidel(matriz, b, n, tol):
     # ICOD == 4
     # Vale a mesma condição de convergência que Jacobi
+    if not diagonal_dominante(matriz):
+        return "Execução parada. Matriz deve ser diagonal dominante."
+
     x0 = [1 for _ in range(n)]
     x1 = [0 for _ in range(n)]
     historico = []  # Lista que guardará o histórico dos erros
@@ -167,7 +181,6 @@ def determinante(matriz):
 def simetrica(matriz):
     n = len(matriz)
 
-    # Verificar se é simétrica
     for i in range(n):
         for j in range(n):
             if i == j:
@@ -178,6 +191,22 @@ def simetrica(matriz):
     return True
 
 
+def diagonal_dominante(matriz):
+    n = len(matriz)
+    for i in range(n):
+        soma_linha = 0
+        soma_coluna = 0
+        for j in range(n):
+            if i == j:
+                continue
+            soma_linha += abs(matriz[i][j])
+            soma_coluna += abs(matriz[j][i])
+        if abs(matriz[i][i]) < soma_coluna or abs(matriz[i][i]) < soma_coluna:
+            return False
+    return True
+
+
 # print(determinante(A))
 # print(np.linalg.det(A))
-print(decomposicao_lu(A, B, 4))
+# print(decomposicao_cholesky(A, B, 4))
+# print(decomposicao_lu(A, B, 4))
