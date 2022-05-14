@@ -44,6 +44,9 @@ def metodo_jacobi(matriz, n, tol):
     if not simetrica(matriz):
         return "Execução parada. Matriz deve ser simétrica."
 
+    num_iter = 1
+    X0 = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
+
     while True:
         # Achar o maior elemento de A, fora da diagonal principal
         maior = 0
@@ -57,10 +60,10 @@ def metodo_jacobi(matriz, n, tol):
                     pos_maior = [i, j]
 
         # Achar valor de phi
-        if matriz[pos_maior[0]][pos_maior[0]] == matriz[pos_maior[1]][pos_maior[0]]:
+        if matriz[pos_maior[0]][pos_maior[0]] == matriz[pos_maior[1]][pos_maior[1]]:
             phi = math.pi / 4
         else:
-            arctg_num = (2 * matriz[pos_maior[0]][pos_maior[1]])
+            arctg_num = (2 * maior)
             arctg_deno = matriz[pos_maior[0]][pos_maior[0]] - matriz[pos_maior[1]][pos_maior[1]]
             phi = (1 / 2) * math.atan(arctg_num / arctg_deno)
 
@@ -68,12 +71,35 @@ def metodo_jacobi(matriz, n, tol):
         sen = math.sin(phi)
         cos = math.cos(phi)
 
-        #matriz[pos_maior[0]][pos_maior[0]] =
-        #matriz[pos_maior[0]][pos_maior[1]] =
-        #matriz[pos_maior[1]][pos_maior[0]] =
-        #matriz[pos_maior[1]][pos_maior[1]] =
+        # Fazendo PT.A
+        for j in range(n):
+            x = matriz[pos_maior[0]][j]
+            y = matriz[pos_maior[1]][j]
+
+            matriz[pos_maior[0]][j] = cos * x + sen * y
+            matriz[pos_maior[1]][j] = -sen * x + cos * y
+
+        # Fazendo PTA.P e Xk.P
+        for i in range(n):
+            x = matriz[i][pos_maior[0]]
+            y = matriz[i][pos_maior[1]]
+
+            matriz[i][pos_maior[0]] = cos * x + sen * y
+            matriz[i][pos_maior[1]] = -sen * x + cos * y
+
+            x = X0[i][pos_maior[0]]
+            y = X0[i][pos_maior[1]]
+
+            X0[i][pos_maior[0]] = cos * x + sen * y
+            X0[i][pos_maior[1]] = -sen * x + cos * y
+
+        if elem_fora_diag_zero(matriz, n, tol):
+            return matriz, X0, num_iter
+
+        num_iter += 1
 
 
+# Rotinas acessórias
 def residuo(lambda0, lambda1):
     return abs(lambda1 - lambda0) / abs(lambda1)
 
@@ -91,6 +117,28 @@ def simetrica(matriz):
     return True
 
 
+def elem_fora_diag_zero(matriz, n, tol):
+    n_elementos_zerados = 0
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            if abs(matriz[i][j]) < tol:
+                n_elementos_zerados += 1
+            else:
+                return False
+    return True
+
+
+def determinante_jacobi(matriz, n):
+    det = 1
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                det *= matriz[i][j]
+    return det
+
+
 A = [[1, 0.2, 0], [0.2, 1, 0.5], [0, 0.5, 1]]
 # print(metodo_potencia(A, 3, 0.0001))
-print(metodo_jacobi(A, 3, 0.01))
+print(metodo_jacobi(A, 3, 0.001))
