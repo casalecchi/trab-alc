@@ -1,7 +1,4 @@
-import sys
-
-
-def ler_arquivo3(file):
+def ler_arquivo(file):
     with open(file, 'r') as f:
         ICOD = int(f.readline())
         N = int(f.readline())
@@ -14,8 +11,4 @@ def ler_arquivo3(file):
             coordenada = [float(coordenada[0]), float(coordenada[1])]
             coordenadas.append(coordenada)
 
-
         return ICOD, N, coordenadas, x_estimar
-
-
-print(ler_arquivo3(sys.argv[1]))
