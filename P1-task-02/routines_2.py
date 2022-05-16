@@ -8,7 +8,6 @@ import math
 
 def metodo_potencia(matriz, n, tol):
     # ICOD == 1
-    # x0 tem que ser solução do problema AX=lambdaX
     x0 = [1 for _ in range(n)]
     lambda0 = 1
 
@@ -32,7 +31,8 @@ def metodo_potencia(matriz, n, tol):
         historico.append(erro)
 
         if erro < tol:
-            return x1, lambda1, historico
+            num_iter = len(historico)
+            return x1, lambda1, num_iter
 
         x0 = x1[:]
         lambda0 = lambda1
@@ -42,7 +42,7 @@ def metodo_jacobi(matriz, n, tol):
     # ICOD == 2
     # Matriz A deve ser simétrica
     if not simetrica(matriz):
-        return "Execução parada. Matriz deve ser simétrica."
+        return 0, 0, "Execução parada. Matriz deve ser simétrica."
 
     num_iter = 1
     X0 = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
@@ -141,4 +141,4 @@ def determinante_jacobi(matriz, n):
 
 A = [[1, 0.2, 0], [0.2, 1, 0.5], [0, 0.5, 1]]
 # print(metodo_potencia(A, 3, 0.0001))
-print(metodo_jacobi(A, 3, 0.001))
+print(metodo_potencia(A, 3, 0.001))

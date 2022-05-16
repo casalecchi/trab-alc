@@ -12,7 +12,10 @@ def interpolacao(pontos, n, x_estimar):
         for j in range(n):
             if i == j:
                 continue
-            termo *= (x_estimar - x[j]) / (x[i] - x[j])
+            try:
+                termo *= (x_estimar - x[j]) / (x[i] - x[j])
+            except ZeroDivisionError:
+                return "Execução parada. Pontos com a mesma coordernada X."
         fx += termo
     return fx
 

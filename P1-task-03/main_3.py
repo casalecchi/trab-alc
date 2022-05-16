@@ -12,3 +12,5 @@ elif icod == 2:
     y = regressao(pontos, n, x_estimar)
     tem_erro = True if type(y) == str else False
     escrever_saida("saida.txt", sys.argv[1], y, tem_erro)
+else:
+    print("ICOD inválido.")
