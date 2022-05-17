@@ -1,8 +1,3 @@
-'''Retornar:
-    - Autovalores e autovetores da matriz A
-    - Possíveis erros de uso
-    - Determinante quando solicitado
-    - Número de iterações para convergência'''
 import math
 
 
@@ -118,13 +113,12 @@ def simetrica(matriz):
 
 
 def elem_fora_diag_zero(matriz, n, tol):
-    n_elementos_zerados = 0
     for i in range(n):
         for j in range(n):
             if i == j:
                 continue
             if abs(matriz[i][j]) < tol:
-                n_elementos_zerados += 1
+                continue
             else:
                 return False
     return True

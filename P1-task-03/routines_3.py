@@ -13,7 +13,7 @@ def interpolacao(pontos, n, x_estimar):
             if i == j:
                 continue
             try:
-                termo *= (x_estimar - x[j]) / (x[i] - x[j])
+                termo *= (x_estimar - x[j]) / (x[i] - x[j])  # yi * øi(x)
             except ZeroDivisionError:
                 return "Execução parada. Pontos com a mesma coordernada X."
         fx += termo
@@ -67,7 +67,3 @@ def decomposicao_lu(matriz, b, n):
         b[i] = b[i] / matriz[i][i]
 
     return b
-
-
-print(regressao([[1.0, 2.0], [2.5, 3.5], [4.0, 8.0]], 3, 3.25))
-

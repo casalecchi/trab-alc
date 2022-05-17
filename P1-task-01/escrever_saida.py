@@ -15,7 +15,7 @@ def escrever_saida(arq_saida, arq_entrada, x, met_iter, num_iter, historico, tem
             saida.write(f"Solução do sistema X: {x}\n")
             if met_iter:
                 saida.write(f"Número de iterações: {num_iter}\n")
-                saida.write(f"Histórico de erros (últimos 100): {historico[-100:]}\n")
+                saida.write(f"Histórico de erros: {historico}\n")
         if calculou_det:
             saida.write(f"Erros de uso (determinante): Não foi possível calcular o determinante.\n")
         saida.write(f"Erros de uso: {erro}\n")
